@@ -1,0 +1,164 @@
+{
+  "run_id": "run_20261027_184203_a3f9",
+  "status": "completed",
+  "execution_time_seconds": 118.6,
+  "source": "zetaris",
+  "output": {
+    "summary": "Short video, evening slots and Pidgin captions drive engagement for Saveurs de Douala, and promo code DOUALA10 is the main sales driver. 4 of 6 claims passed the EvidenceCritic; 2 were rejected. Next week's plan leans on evening video plus one weekend promo.",
+    "insights": [
+      {
+        "id": "ins-1",
+        "statement": "Short vertical videos (Reels and TikTok) average a 6.8% engagement rate, against 2.9% for static images.",
+        "evidence": [
+          { "query": "engagement_by_format", "segment": "format=video", "metric": "avg_engagement_rate", "value": 0.068 },
+          { "query": "engagement_by_format", "segment": "format=image", "metric": "avg_engagement_rate", "value": 0.029 }
+        ]
+      },
+      {
+        "id": "ins-2",
+        "statement": "Posts published between 18:00 and 20:00 reach 1.9 times more people than posts published between 07:00 and 10:00.",
+        "evidence": [
+          { "query": "engagement_by_hour", "segment": "hour=18-20", "metric": "avg_reach", "value": 4120 },
+          { "query": "engagement_by_hour", "segment": "hour=07-10", "metric": "avg_reach", "value": 2170 }
+        ]
+      },
+      {
+        "id": "ins-3",
+        "statement": "Promo code DOUALA10 brought 214 orders and 1,284,000 FCFA in sales over the period, more than all other codes combined.",
+        "evidence": [
+          { "query": "sales_by_promo_code", "segment": "promo_code=DOUALA10", "metric": "orders", "value": 214 },
+          { "query": "sales_by_promo_code", "segment": "promo_code=DOUALA10", "metric": "revenue_fcfa", "value": 1284000 },
+          { "query": "sales_by_promo_code", "segment": "promo_code=other", "metric": "revenue_fcfa", "value": 731500 }
+        ]
+      },
+      {
+        "id": "ins-4",
+        "statement": "Posts written in Pidgin get 41% more comments on average than posts written in French.",
+        "evidence": [
+          { "query": "engagement_by_language", "segment": "language=pidgin", "metric": "avg_comments", "value": 37 },
+          { "query": "engagement_by_language", "segment": "language=fr", "metric": "avg_comments", "value": 26.2 }
+        ]
+      }
+    ],
+    "rejected": [
+      {
+        "claim": { "id": "claim-5", "statement": "Instagram ads are the most profitable channel for the business." },
+        "reasons": [
+          "Number check failed: ad_roas_by_platform shows ROAS 2.1 on Instagram and 2.4 on Facebook.",
+          "Overreach: sales are not attributed per ad, so 'most profitable' cannot be proven from the data."
+        ]
+      },
+      {
+        "claim": { "id": "claim-6", "statement": "Engagement doubled between July and August." },
+        "reasons": [
+          "Cited ratio 2.0; engagement_by_month gives 1.31 (outside the 3% tolerance).",
+          "Still wrong after 2 revision rounds, so the claim was dropped."
+        ]
+      }
+    ],
+    "recommendations": [
+      {
+        "action": "Make 3 of the 5 weekly posts short vertical videos (Reels or TikTok).",
+        "why": "Video averages 6.8% engagement against 2.9% for static images.",
+        "claim_ids": ["ins-1"]
+      },
+      {
+        "action": "Schedule posts between 18:00 and 20:00.",
+        "why": "Evening posts reach 1.9 times more people than morning posts; a lesson from an earlier run says the same.",
+        "claim_ids": ["ins-2"]
+      },
+      {
+        "action": "Keep DOUALA10 running and mention it in every promo post.",
+        "why": "It brought 214 orders and 1,284,000 FCFA, more than all other codes combined.",
+        "claim_ids": ["ins-3"]
+      },
+      {
+        "action": "Write at least two posts a week in Pidgin.",
+        "why": "Pidgin posts get 41% more comments than French posts.",
+        "claim_ids": ["ins-4"]
+      }
+    ],
+    "plan": [
+      { "day": "Monday", "platform": "instagram", "format": "reel", "pillar": "behind the scenes", "language": "fr", "post_hour": 19, "angle": "How we cook the ndolé every morning in Akwa" },
+      { "day": "Tuesday", "platform": "tiktok", "format": "video", "pillar": "menu", "language": "pidgin", "post_hour": 19, "angle": "Poulet DG close-up with price and code", "promo_code": "DOUALA10" },
+      { "day": "Thursday", "platform": "facebook", "format": "carousel", "pillar": "menu", "language": "en", "post_hour": 18, "angle": "This week's lunch menu, plates from 1,500 FCFA" },
+      { "day": "Friday", "platform": "instagram", "format": "reel", "pillar": "customer story", "language": "fr", "post_hour": 20, "angle": "A regular customer on why our eru tastes like home" },
+      { "day": "Saturday", "platform": "whatsapp", "format": "status", "pillar": "promo", "language": "pidgin", "post_hour": 18, "angle": "Weekend beignets-haricot and bouillie deal", "promo_code": "DOUALA10" }
+    ],
+    "drafts": [
+      {
+        "slot": 1,
+        "platform": "instagram",
+        "format": "reel",
+        "language": "fr",
+        "post_hour": 19,
+        "caption": "Le ndolé de mama, comme à la maison 🍲 Regardez comment on le prépare chaque matin à Akwa. Plat complet : 2 500 FCFA. Commandez sur WhatsApp.",
+        "hashtags": ["#Douala", "#Ndole", "#SaveursDeDouala"]
+      },
+      {
+        "slot": 2,
+        "platform": "tiktok",
+        "format": "video",
+        "language": "pidgin",
+        "post_hour": 19,
+        "caption": "Una don try we poulet DG? 🔥 Plantain sweet, chicken correct. Na 3 500 FCFA only. Use code DOUALA10 make you get 10% off. Write we for WhatsApp.",
+        "hashtags": ["#PouletDG", "#Douala", "#CameroonFood"]
+      },
+      {
+        "slot": 3,
+        "platform": "facebook",
+        "format": "carousel",
+        "language": "en",
+        "post_hour": 18,
+        "caption": "This week's lunch menu at Saveurs de Douala: ndolé, poulet DG, eru and beignets-haricot. Plates from 1,500 FCFA. Order on WhatsApp and pick up in 20 minutes.",
+        "hashtags": ["#LunchDouala", "#SaveursDeDouala"]
+      },
+      {
+        "slot": 4,
+        "platform": "instagram",
+        "format": "reel",
+        "language": "fr",
+        "post_hour": 20,
+        "caption": "« Ça me rappelle le goût de chez ma grand-mère » : Brenda, cliente depuis 2024 ❤️ Venez goûter notre eru, 2 000 FCFA. Réservez sur WhatsApp.",
+        "hashtags": ["#Eru", "#Douala", "#SaveursDeDouala"]
+      },
+      {
+        "slot": 5,
+        "platform": "whatsapp",
+        "format": "status",
+        "language": "pidgin",
+        "post_hour": 18,
+        "caption": "Weekend don land! 🎉 Beignets-haricot + bouillie na 1 000 FCFA, Saturday and Sunday. Show code DOUALA10 make you get 10% off. Order for WhatsApp.",
+        "hashtags": ["#BeignetsHaricot", "#WeekendDouala"]
+      }
+    ],
+    "outbox_file": "outbox/saveurs-de-douala/run_20261027_184203_a3f9.json"
+  },
+  "memory": {
+    "recalled": [
+      { "id": "mem_7f3a91c2", "content": "Evening posts (18:00-20:00) outperform morning posts on reach for saveurs-de-douala.", "relevance": 0.82 },
+      { "id": "mem_2b8e4d10", "content": "Promo code DOUALA10 is the strongest sales driver; mention it in promo posts.", "relevance": 0.64 }
+    ],
+    "stored": 4
+  },
+  "data_quality": { "total_posts": 186, "valid_posts": 179, "invalid_posts": 7 },
+  "models": ["nvidia/llama-3.3-nemotron-super-49b-v1", "meta/llama-3.1-8b-instruct"],
+  "trace": [
+    { "timestamp": "2026-10-27T18:42:03.112Z", "agent_name": "MemoryKeeper", "action": "recall_lessons", "target_agent": "DataAnalyst", "model": null, "status": "success", "output_summary": "Recalled 2 lessons for saveurs-de-douala (top relevance 0.82)", "retry_count": 0 },
+    { "timestamp": "2026-10-27T18:42:04.540Z", "agent_name": "DataAnalyst", "action": "run_catalogue_queries", "target_agent": null, "model": null, "status": "success", "output_summary": "6 Zetaris queries; 186 posts, 7 excluded by DQ rule valid_metrics", "retry_count": 0 },
+    { "timestamp": "2026-10-27T18:42:31.207Z", "agent_name": "DataAnalyst", "action": "propose_claims", "target_agent": "EvidenceCritic", "model": "nvidia/llama-3.3-nemotron-super-49b-v1", "status": "success", "output_summary": "Proposed 6 claims, each citing query/segment/metric/value", "retry_count": 0 },
+    { "timestamp": "2026-10-27T18:42:39.884Z", "agent_name": "EvidenceCritic", "action": "verify_claims", "target_agent": "DataAnalyst", "model": "nvidia/llama-3.3-nemotron-super-49b-v1", "status": "needs_revision", "output_summary": "3 approved; 2 failed the 3% number check; 1 overreach. Sent back with actual values", "retry_count": 0 },
+    { "timestamp": "2026-10-27T18:42:58.031Z", "agent_name": "DataAnalyst", "action": "revise_claims", "target_agent": "EvidenceCritic", "model": "nvidia/llama-3.3-nemotron-super-49b-v1", "status": "success", "output_summary": "Revised 3 claims using the Critic's actual values", "retry_count": 1 },
+    { "timestamp": "2026-10-27T18:43:05.419Z", "agent_name": "EvidenceCritic", "action": "verify_claims", "target_agent": "DataAnalyst", "model": "nvidia/llama-3.3-nemotron-super-49b-v1", "status": "needs_revision", "output_summary": "1 more approved (4 total); 2 still failing", "retry_count": 1 },
+    { "timestamp": "2026-10-27T18:43:14.660Z", "agent_name": "DataAnalyst", "action": "revise_claims", "target_agent": "EvidenceCritic", "model": "nvidia/llama-3.3-nemotron-super-49b-v1", "status": "success", "output_summary": "Revised 2 claims", "retry_count": 2 },
+    { "timestamp": "2026-10-27T18:43:19.902Z", "agent_name": "EvidenceCritic", "action": "verify_claims", "target_agent": "Strategist", "model": "nvidia/llama-3.3-nemotron-super-49b-v1", "status": "rejected", "output_summary": "Max rounds reached: 2 claims rejected, 4 approved claims passed on", "retry_count": 2 },
+    { "timestamp": "2026-10-27T18:43:33.128Z", "agent_name": "Strategist", "action": "recommend_and_plan", "target_agent": "ContentCreator", "model": "meta/llama-3.1-8b-instruct", "status": "success", "output_summary": "4 recommendations and a 5-post plan from 4 approved claims + 2 recalled lessons", "retry_count": 0 },
+    { "timestamp": "2026-10-27T18:43:47.775Z", "agent_name": "ContentCreator", "action": "write_drafts", "target_agent": "BrandReviewer", "model": "meta/llama-3.1-8b-instruct", "status": "success", "output_summary": "5 drafts written", "retry_count": 0 },
+    { "timestamp": "2026-10-27T18:43:47.801Z", "agent_name": "BrandReviewer", "action": "review_drafts", "target_agent": "ContentCreator", "model": null, "status": "needs_revision", "output_summary": "4/5 pass; draft 3 has no FCFA price", "retry_count": 0 },
+    { "timestamp": "2026-10-27T18:43:58.344Z", "agent_name": "ContentCreator", "action": "revise_draft", "target_agent": "BrandReviewer", "model": "meta/llama-3.1-8b-instruct", "status": "success", "output_summary": "Draft 3 revised with price", "retry_count": 1 },
+    { "timestamp": "2026-10-27T18:43:58.362Z", "agent_name": "BrandReviewer", "action": "review_drafts", "target_agent": "Publisher", "model": null, "status": "success", "output_summary": "5/5 drafts approved (<=280 chars, WhatsApp CTA, FCFA price)", "retry_count": 1 },
+    { "timestamp": "2026-10-27T18:43:58.390Z", "agent_name": "Publisher", "action": "write_outbox", "target_agent": null, "model": null, "status": "info", "output_summary": "Dry run: 5 posts written to outbox/saveurs-de-douala/run_20261027_184203_a3f9.json; nothing published", "retry_count": 0 },
+    { "timestamp": "2026-10-27T18:44:01.055Z", "agent_name": "MemoryKeeper", "action": "feedback", "target_agent": null, "model": null, "status": "success", "output_summary": "mem_7f3a91c2 confirmed by today's data (helpful)", "retry_count": 0 },
+    { "timestamp": "2026-10-27T18:44:01.710Z", "agent_name": "MemoryKeeper", "action": "store_lessons", "target_agent": null, "model": null, "status": "success", "output_summary": "Stored 4 Critic-approved insights", "retry_count": 0 }
+  ]
+}

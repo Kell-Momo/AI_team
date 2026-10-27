@@ -8,9 +8,9 @@ import type { BrandReview, Draft, PlanSlot, Produced } from "./types.ts";
 
 export const MAX_POST_CHARS = 280;
 
+// No phone number on purpose: we have none on file and must never invent one.
 export interface BrandProfile {
   name: string;
-  whatsapp: string;
   dishes: readonly { name: string; price: number; promo_code?: string }[];
   hashtags: readonly string[];
 }
@@ -18,7 +18,6 @@ export interface BrandProfile {
 // Synthetic client profile matching the generated sample data (same menu, prices and codes).
 export const SAVEURS_DE_DOUALA: BrandProfile = {
   name: "Saveurs de Douala",
-  whatsapp: "+237 690 00 00 00",
   dishes: [
     { name: "ndolé-plantain", price: 3500, promo_code: "NDOLE10" },
     { name: "poulet DG", price: 5000, promo_code: "POULETDG" },
@@ -48,6 +47,8 @@ const SUPERLATIVES: readonly RegExp[] = [
 ];
 const FCFA_PRICE = /\d[\d\s.,  ]*\s?FCFA\b/i;
 const OTHER_CURRENCY = /[€$£₦]|\b(EUR|USD|GBP|XAF|NGN|euros?|dollars?|naira)\b|(?<!F\s?)\bCFA\b/i;
+// International prefix, Cameroon mobile format (6XX XX XX XX) or a long digit run; prices never look like these.
+const PHONE = /\+\d{2,3}[\s.-]?\d|\b6\d{2}(?:[\s.-]?\d{2}){3}\b|\b\d{9,}\b/;
 
 /** The text that would actually be posted: caption plus hashtags. */
 export const postText = (d: Pick<Draft, "caption" | "hashtags">) => [d.caption, ...d.hashtags].join(" ").trim();
@@ -61,6 +62,8 @@ export function checkBrandRules(draft: Pick<Draft, "caption" | "hashtags">): str
   if (!FCFA_PRICE.test(draft.caption)) issues.push("No price in FCFA.");
   const currency = OTHER_CURRENCY.exec(text);
   if (currency) issues.push(`Currency other than FCFA: "${currency[0]}".`);
+  const phone = PHONE.exec(text);
+  if (phone) issues.push(`Contains a phone number ("${phone[0]}"): none is on file, never invent one.`);
   for (const re of SUPERLATIVES) {
     const m = re.exec(text);
     if (m) issues.push(`Unprovable superlative: "${m[0]}".`);
@@ -73,26 +76,26 @@ export function checkBrandRules(draft: Pick<Draft, "caption" | "hashtags">): str
 const formatPrice = (xaf: number, language: string) =>
   String(xaf).replace(/\B(?=(\d{3})+(?!\d))/g, language === "en" ? "," : " ");
 
-type Template = (dish: string, price: string, wa: string, code?: string) => string;
+type Template = (dish: string, price: string, code?: string) => string;
 
 const TEMPLATES: Record<string, Record<string, Template>> = {
   fr: {
-    menu: (d, p, wa) => `Aujourd'hui chez Saveurs de Douala : ${d}, préparé comme à la maison. Seulement ${p} FCFA. Commandez sur WhatsApp au ${wa}.`,
-    promo: (d, p, wa, c) => `Promo de la semaine : ${d}${c ? ` avec le code ${c}` : ""}. Seulement ${p} FCFA. Commandez sur WhatsApp au ${wa}.`,
-    behind_scenes: (d, p, wa) => `Ce matin au marché de Sandaga pour choisir les ingrédients du ${d}. ${p} FCFA le plat, commandez sur WhatsApp au ${wa}.`,
-    customer_story: (d, p, wa) => `Paul vient chaque vendredi depuis Bonabéri pour notre ${d}. Merci pour la fidélité ! ${p} FCFA, commandez sur WhatsApp au ${wa}.`,
+    menu: (d, p) => `Aujourd'hui chez Saveurs de Douala : ${d}, préparé comme à la maison. Seulement ${p} FCFA. Commandez sur WhatsApp.`,
+    promo: (d, p, c) => `Promo de la semaine : ${d}${c ? ` avec le code ${c}` : ""}. Seulement ${p} FCFA. Commandez sur WhatsApp.`,
+    behind_scenes: (d, p) => `Ce matin au marché de Sandaga pour choisir les ingrédients du ${d}. ${p} FCFA le plat. Commandez sur WhatsApp.`,
+    customer_story: (d, p) => `Paul vient chaque vendredi depuis Bonabéri pour notre ${d}. Merci pour la fidélité ! ${p} FCFA. Commandez sur WhatsApp.`,
   },
   en: {
-    menu: (d, p, wa) => `On the menu today: ${d}, cooked the Douala way. Only ${p} FCFA. Order on WhatsApp: ${wa}.`,
-    promo: (d, p, wa, c) => `This week's deal: ${d}${c ? ` with code ${c}` : ""}. Only ${p} FCFA. Order on WhatsApp: ${wa}.`,
-    behind_scenes: (d, p, wa) => `Early run to Sandaga market for today's ${d}. ${p} FCFA a plate, order on WhatsApp: ${wa}.`,
-    customer_story: (d, p, wa) => `Grace orders our ${d} for her office every Friday. Thank you for the trust! ${p} FCFA, order on WhatsApp: ${wa}.`,
+    menu: (d, p) => `On the menu today: ${d}, cooked the Douala way. Only ${p} FCFA. Order on WhatsApp.`,
+    promo: (d, p, c) => `This week's deal: ${d}${c ? ` with code ${c}` : ""}. Only ${p} FCFA. Order on WhatsApp.`,
+    behind_scenes: (d, p) => `Early run to Sandaga market for today's ${d}. ${p} FCFA a plate. Order on WhatsApp.`,
+    customer_story: (d, p) => `Grace orders our ${d} for her office every Friday. Thank you for the trust! ${p} FCFA. Order on WhatsApp.`,
   },
   pidgin: {
-    menu: (d, p, wa) => `${d} don ready for kitchen, come chop before e finish! Na only ${p} FCFA. Send we message for WhatsApp: ${wa}.`,
-    promo: (d, p, wa, c) => `${c ? `Use code ${c} make you chop ${d} cheap cheap.` : `Deal of the week: ${d}.`} Na only ${p} FCFA. Send we message for WhatsApp: ${wa}.`,
-    behind_scenes: (d, p, wa) => `We go Sandaga market early for buy correct thing for the ${d}. Na ${p} FCFA. Send we message for WhatsApp: ${wa}.`,
-    customer_story: (d, p, wa) => `Mami Brenda say our ${d} sweet pass. Thank you! Na ${p} FCFA. Send we message for WhatsApp: ${wa}.`,
+    menu: (d, p) => `${d} don ready for kitchen, come chop before e finish! Na only ${p} FCFA. Send we message for WhatsApp.`,
+    promo: (d, p, c) => `${c ? `Use code ${c} make you chop ${d} cheap cheap.` : `Deal of the week: ${d}.`} Na only ${p} FCFA. Send we message for WhatsApp.`,
+    behind_scenes: (d, p) => `We go Sandaga market early for buy correct thing for the ${d}. Na ${p} FCFA. Send we message for WhatsApp.`,
+    customer_story: (d, p) => `Mami Brenda say our ${d} sweet pass. Thank you! Na ${p} FCFA. Send we message for WhatsApp.`,
   },
 };
 
@@ -113,7 +116,7 @@ export function templateDraft(slot: PlanSlot, index: number, brand: BrandProfile
     format: slot.format,
     language: slot.language,
     post_hour: slot.post_hour,
-    caption: template(dish.name, formatPrice(dish.price, slot.language), brand.whatsapp, code),
+    caption: template(dish.name, formatPrice(dish.price, slot.language), code),
     hashtags: [...brand.hashtags],
   };
 }
@@ -121,7 +124,8 @@ export function templateDraft(slot: PlanSlot, index: number, brand: BrandProfile
 const CREATOR_SYSTEM = [
   "You are ContentCreator in GrowthLoop, writing social media posts for Saveurs de Douala, a food business in Douala, Cameroon.",
   "Write one post per plan slot, in the slot's language (fr = French, en = English, pidgin = Cameroonian Pidgin English).",
-  `Hard rules: caption plus hashtags at most ${MAX_POST_CHARS} characters; a WhatsApp call to action with the number;`,
+  `Hard rules: caption plus hashtags at most ${MAX_POST_CHARS} characters;`,
+  'a WhatsApp call to action without any phone number ("Commandez sur WhatsApp", "Order on WhatsApp", "Send we message for WhatsApp"): never write or invent a phone number;',
   "at least one real dish price written in FCFA (use the menu prices); FCFA is the only currency;",
   'no unprovable superlatives ("best in Douala", "number 1", "meilleur de Douala", "garanti"). Mention the promo code if the slot has one.',
   'Reply with JSON only: {"drafts":[{"slot":1,"caption":"...","hashtags":["#Douala"]}]}',
@@ -164,7 +168,7 @@ export interface ContentOptions {
 
 const brandFacts = (brand: BrandProfile) =>
   [
-    `Business: ${brand.name}. WhatsApp: ${brand.whatsapp}.`,
+    `Business: ${brand.name}. Orders via WhatsApp (no phone number on file: do not write one).`,
     `Menu: ${brand.dishes.map((d) => `${d.name} ${d.price} FCFA${d.promo_code ? ` (code ${d.promo_code})` : ""}`).join("; ")}.`,
     `Default hashtags: ${brand.hashtags.join(" ")}`,
   ].join("\n");

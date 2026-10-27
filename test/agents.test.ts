@@ -315,14 +315,14 @@ test("model strategy is used when valid; unknown claim ids and promo codes are d
 
 // ---------- Content ----------
 
-const okDraft = { caption: "Ndolé-plantain du jour, seulement 3 500 FCFA. Commandez sur WhatsApp au +237 690 00 00 00.", hashtags: ["#Douala"] };
+const okDraft = { caption: "Ndolé-plantain du jour, seulement 3 500 FCFA. Commandez sur WhatsApp.", hashtags: ["#Douala"] };
 
 test("brand rules pass a clean draft and catch each violation", () => {
   assert.deepEqual(checkBrandRules(okDraft), []);
   const cases: [string, RegExp][] = [
     [`${okDraft.caption} ${"Miam ".repeat(50)}`, /Too long/],
     ["Ndolé-plantain du jour, seulement 3 500 FCFA. Passez nous voir à Akwa.", /No WhatsApp/],
-    ["Ndolé-plantain du jour. Commandez sur WhatsApp au +237 690 00 00 00.", /No price in FCFA/],
+    ["Ndolé-plantain du jour. Commandez sur WhatsApp.", /No price in FCFA/],
     [`${okDraft.caption} About 5 EUR.`, /Currency other than FCFA/],
     [`${okDraft.caption} Also 3500 XAF.`, /Currency other than FCFA/],
     [`${okDraft.caption} Best in Douala!`, /superlative/],
@@ -331,6 +331,8 @@ test("brand rules pass a clean draft and catch each violation", () => {
     [`${okDraft.caption} Le meilleur ndolé à Douala.`, /superlative/],
     [`${okDraft.caption} Goût garanti.`, /superlative/],
     [`${okDraft.caption} N°1 du ndolé.`, /superlative/],
+    [`${okDraft.caption} Appelez le +237 690 12 34 56.`, /phone number/],
+    [`${okDraft.caption} Appelez le 690 12 34 56.`, /phone number/],
   ];
   for (const [caption, expected] of cases) {
     const issues = checkBrandRules({ caption, hashtags: okDraft.hashtags });

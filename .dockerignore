@@ -1,0 +1,10 @@
+node_modules
+frontend/node_modules
+# Rebuilt inside the image; a stale local build must not leak in.
+frontend/dist
+.env
+.env.*
+logs
+.memory
+outbox
+.git
