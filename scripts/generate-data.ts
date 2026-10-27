@@ -167,6 +167,8 @@ const campaignRuns = (c: Campaign, ms: number) => ms >= c.start && ms <= c.end &
 const formatPrice = (xaf: number, lang: Language) =>
   String(xaf).replace(/\B(?=(\d{3})+(?!\d))/g, lang === "en" ? "," : " ");
 
+// Quotes inside captions are typographic (« », “ ”), never ASCII ": Spark's CSV reader behind
+// Zetaris escapes with \ by default, so RFC-style "" inside a field may be misread.
 const OPENERS: Record<Language, Record<Pillar, readonly ((dish: string, code: string) => string)[]>> = {
   fr: {
     menu: [
@@ -182,7 +184,7 @@ const OPENERS: Record<Language, Record<Pillar, readonly ((dish: string, code: st
       (d) => `Au marché de Sandaga ce matin pour choisir les ingrédients du ${d}.`,
     ],
     customer_story: [
-      (d) => `Une cliente de Bonapriso nous écrit : "le meilleur ${d} de Douala". Merci !`,
+      (d) => `Une cliente de Bonapriso nous écrit : « le meilleur ${d} de Douala ». Merci !`,
       (d) => `Paul vient chaque vendredi depuis Bonabéri pour notre ${d}. Merci pour la fidélité !`,
     ],
   },
@@ -200,7 +202,7 @@ const OPENERS: Record<Language, Record<Pillar, readonly ((dish: string, code: st
       (d) => `Early run to Sandaga market to pick what goes into today's ${d}.`,
     ],
     customer_story: [
-      (d) => `A customer from Bonamoussadi says our ${d} tastes like "mami's own". Thank you!`,
+      (d) => `A customer from Bonamoussadi says our ${d} tastes like “mami's own”. Thank you!`,
       (d) => `Grace orders our ${d} for her office every Friday. Thank you for the trust!`,
     ],
   },
@@ -218,7 +220,7 @@ const OPENERS: Record<Language, Record<Pillar, readonly ((dish: string, code: st
       (d) => `We go Sandaga market early for buy correct thing for the ${d}.`,
     ],
     customer_story: [
-      (d) => `Our customer for Makepe talk say our ${d} na "number one". Thank you plenty!`,
+      (d) => `Our customer for Makepe talk say our ${d} na “number one”. Thank you plenty!`,
       (d) => `Mama Brenda for Deido no dey miss our ${d} every Sunday. We thank you!`,
     ],
   },

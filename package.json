@@ -13,7 +13,8 @@
     "test:hmem": "tsx scripts/test.ts test/hmem.test.ts",
     "data:generate": "tsx scripts/generate-data.ts",
     "zetaris:setup": "tsx scripts/zetaris-setup.ts",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "zetaris:check": "tsx scripts/zetaris-check.ts"
   },
   "devDependencies": {
     "@types/node": "^20.19.43",
