@@ -91,6 +91,55 @@ model that actually answered (`model`, null for deterministic steps).
 
 ## Data layer: Zetaris
 
+The agents read business data **only through Zetaris**, over its REST API
+(`src/adapters/zetaris.ts`, the only module that talks to Zetaris).
+
+**Layers built in Zetaris**
+
+1. **Lightning file tables.** Database `growthloop_files` with four `FILESTORE` tables (CSV, header,
+   inferred schema) over the files in the driver container: `posts`, `post_metrics`, `ad_spend`, `sales`.
+2. **USL `marketing`** (namespace `lightning.metastore.growthloop`): three typed tables, activated
+   from the file tables with explicit `CAST`s. The agents query only these:
+
+   | USL table | Built from | Columns |
+   |---|---|---|
+   | `post_performance` | `posts` joined with `post_metrics` on `post_id` (one row per post) | post_id, posted_date, platform, format, pillar, language, post_hour, has_price, has_cta, origin, promo_code, caption, reach, engagements (= likes + comments + shares + saves), link_clicks |
+   | `campaign_daily` | `ad_spend` | row_id (campaign_id + ad_date), ad_date, campaign_id, platform, spend_xaf, impressions, clicks, promo_code |
+   | `orders` | `sales` | order_id, order_date, channel, promo_code, amount_xaf |
+
+3. **Data-quality rule `valid_metrics`** on `post_performance`: `reach > 0 AND engagements <= reach`.
+   It is registered and run in Zetaris (`REGISTER DQ` / `RUN DQ`). The catalogue's segment queries
+   apply the same condition, and the `data_quality` query reports how many posts it excludes.
+
+**Setup** (one-off; safe to re-run):
+
+```
+bash scripts/zetaris/load-data.sh   # copy data/*.csv into the Zetaris driver container
+npm run zetaris:setup               # file tables -> USL marketing -> DQ rule
+npm run zetaris:check               # verify with the agents' own key
+```
+
+- `load-data.sh` runs on the host where Docker runs Zetaris. It copies the 4 CSVs into
+  `/home/zetaris/customer-data/shared/growthloop` in the container `zetaris-driver-1` (override
+  with `ZETARIS_CONTAINER`), then lists them with their line counts.
+- `zetaris:setup` uses `ZETARIS_ADMIN_API_KEY` if set, otherwise `ZETARIS_API_KEY`. It is
+  idempotent: "already exists" answers count as success. It checks the row count of every file
+  table and USL table against the local CSVs, and checks that the number of rows breaking the DQ
+  rule is the expected one. After a failed phase, the later phases are skipped rather than run.
+- `zetaris:check` uses `ZETARIS_API_KEY`: `SELECT 1`, then a row count for each USL table.
+
+**How the adapter calls Zetaris**: `POST {ZETARIS_REST_URL}/sql-editor/sqls/run` with
+`Authorization: Bearer`, `X-Org-ID`, a fresh `X-Request-ID` per attempt, and exactly one SQL
+statement per request (trailing semicolons removed, anything else rejected). 60 s timeout. Network
+errors and bare 5xx answers are retried after 1 s and 3 s; SQL errors are not retried. Rows are
+mapped to objects in the query's column order, and numeric strings become numbers.
+
+**Why this saves time**: without this layer, every audit means exporting posts, post metrics, ad
+spend and sales from separate tools and joining them by hand (by post id, promo code and date)
+before any analysis can start, then repeating it for the next run. Here the joins and the
+data-quality rule are defined once in the USL, and each run queries the joined, checked tables
+directly. We have not measured the time saved.
+
 ## AI provider: Meterless Nightshift
 
 TODO
@@ -105,13 +154,90 @@ TODO
 
 ## Configuration
 
+Copy `.env.example` to `.env` and fill it in. `src/config.ts` is the only module that reads the
+environment. It loads `.env` from the project root, and real environment variables override `.env`.
+Invalid values stop startup with a `ConfigError` that names the variables (never their values).
+
+| Variable | Default | Meaning |
+|---|---|---|
+| `ZETARIS_REST_URL` | `http://localhost:8888/api/v1.0` | Zetaris REST base URL (must be http or https). |
+| `ZETARIS_ORG_ID` | (empty) | Zetaris organisation id, sent as `X-Org-ID`. |
+| `ZETARIS_API_KEY` | (empty) | Key the agents use for queries (intended: a read-only non-admin user). |
+| `ZETARIS_USL` | `lightning.metastore.growthloop.marketing` | Fully qualified USL that holds the 3 tables. Must be a dotted identifier, because it goes into catalogue SQL. |
+| `ZETARIS_ADMIN_API_KEY` | (unset) | Admin key, used only by `npm run zetaris:setup`. Leave it unset otherwise. |
+| `METERLESS_BASE_URL` | `http://127.0.0.1:8088/v1` | Meterless Nightshift base URL (OpenAI-compatible). Any pasted URL is normalised to `<origin>/v1`. |
+| `METERLESS_RUNTIME_TOKEN` | (empty) | Nightshift runtime token, sent as `Authorization: Bearer`. |
+| `METERLESS_MODEL` | `meterless/auto` | Model requested from Nightshift. |
+| `SAMPLE_MODE` | `false` | `true` runs the real agent logic on the local CSVs, without Zetaris or Nightshift (see [Sample mode](#sample-mode)). Accepts true/false, 1/0, yes/no, on/off. |
+| `PORT` | `8000` | HTTP port (1-65535). Port 3000 is taken by the Zetaris UI. |
+| `LOG_LEVEL` | `info` | `debug`, `info`, `warn` or `error`. Filters stdout only; the JSONL trace always records every event. |
+
+Keys and tokens are optional at load time: a missing one gives a clear error from the adapter
+that needs it. Values with whitespace or control characters are rejected. Secret values are
+redacted from logs (see [Security](#security)).
+
+`ZETARIS_CONTAINER` (default `zetaris-driver-1`) is read only by `scripts/zetaris/load-data.sh`.
+
 ## Sample mode
+
+`SAMPLE_MODE=true` is the offline mode for judges: it needs no Zetaris and no Nightshift credentials.
+
+- **Data**: each catalogue query runs its `compute()` over `data/*.csv`, loaded in memory as the
+  same three joined tables as the USL, with the same validity rule. It returns exactly the columns
+  the Zetaris SQL returns (tested). Query results are labelled `source: "sample"`, and each one
+  still records the SQL it would have sent to Zetaris.
+- **Models**: the model adapter makes no calls. Every agent uses its deterministic fallback, and
+  each skipped model call is traced as `llm_call` with status `fallback` and the reason
+  `SAMPLE_MODE: no model calls`.
+- **Everything else is the same code**: the critic's checks and rejections, the brand rules, the
+  dry-run outbox and H-MEM memory (local files in `.memory/<client>/`).
+- The web UI shows a "Sample mode" badge when a result's `source` is `"sample"`.
 
 ## Running tests
 
 TODO
 
 ## Traces
+
+Every run writes `logs/trace-<run_id>.jsonl` (gitignored): one JSON object per line, appended
+synchronously so the lines stay in order and on disk even if the process stops mid-run. The same
+events are printed on stdout as readable lines. Run ids look like `20261027T184203Z-a3f9c1`
+(UTC timestamp + 6 random hex characters) and may only contain `[A-Za-z0-9_-]`.
+
+| Field | Meaning |
+|---|---|
+| `timestamp` | ISO 8601 time of the event |
+| `run_id` | the run this event belongs to |
+| `agent_name` | who acted, e.g. `DataAnalyst`, `EvidenceCritic` |
+| `action` | what it did, e.g. `run_query`, `propose_claims`, `verify_claim`, `revise_claims`, `overreach_review`, `recommend_and_plan`, `write_drafts`, `review_draft`, `tone_review`, `revise_drafts`, `write_outbox`, `llm_call` |
+| `input_summary` | short summary of the input (at most 400 characters) |
+| `output_summary` | short summary of the result, e.g. the critic's reasons with cited vs actual values (at most 400 characters) |
+| `target_agent` | who receives the result (e.g. `DataAnalyst` for a rejected claim, `Strategist` for an approved one), or null |
+| `model` | the model that actually answered, or null for deterministic steps |
+| `retry_count` | the revision round (0 = first attempt) |
+| `status` | see below |
+
+| Status | Meaning | stdout level |
+|---|---|---|
+| `success` | the step worked | info |
+| `info` | a notice, e.g. the dry-run outbox was written | info |
+| `needs_revision` | sent back for another round, e.g. a claim back to DataAnalyst, a draft back to ContentCreator | warn |
+| `rejected` | final rejection after the last allowed round | warn |
+| `fallback` | no usable model answer, so the deterministic logic produced this step | warn |
+| `error` | the step failed, e.g. a query that was logged and skipped | error |
+
+`LOG_LEVEL` only filters stdout; the JSONL file always gets every event. Summaries are truncated,
+and every event is redacted before it is written. Example line (illustrative values):
+
+```json
+{"timestamp":"2026-10-27T18:42:39.884Z","run_id":"20261027T184203Z-a3f9c1","agent_name":"EvidenceCritic","action":"verify_claim","input_summary":"c2: Reel posts average 9.00% engagement ...","output_summary":"format_performance / reel / avg_engagement_rate: cited 0.09, actual 0.0688. ...","target_agent":"DataAnalyst","model":null,"retry_count":0,"status":"needs_revision"}
+```
+
+The same event on stdout:
+
+```
+18:42:39 EvidenceCritic.verify_claim -> DataAnalyst [needs_revision] | in: c2: Reel posts average 9.00% engagement ... | out: format_performance / reel / avg_engagement_rate: cited 0.09, actual 0.0688. ...
+```
 
 ## Security
 
@@ -177,4 +303,10 @@ npm dependencies (installed by npm, not vendored):
 | vite, @vitejs/plugin-react | frontend (dev server and build) | MIT |
 | @types/react, @types/react-dom | frontend (types) | MIT |
 
-Vendored code: TODO (Meterless H-MEM reference implementation, Apache-2.0, to be added under `vendor/`).
+Vendored code:
+
+| Folder | Source | License |
+|---|---|---|
+| `vendor/hmem/` | Meterless H-MEM reference implementation ([Meterless/Meterless](https://github.com/Meterless/Meterless) `engines/hmem/reference/src`), copied unchanged | Apache-2.0 (`vendor/hmem/LICENSE`) |
+
+See [vendor/README.md](vendor/README.md) for the upstream commit and the vendored conformance suite.
