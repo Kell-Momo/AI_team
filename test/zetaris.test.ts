@@ -111,6 +111,16 @@ test("runSql does not retry a 500 that carries an SQL error, and redacts the key
   assert.equal(calls, 1);
 });
 
+test("runSql keeps only the first part of a Java stack trace in msg", async () => {
+  const msg = "org.apache.spark.sql.AnalysisException: parent namespace : metastore is not existing\n\tat com.zetaris.Foo.bar(Foo.scala:42)\n\tat java.base/Thread.run";
+  const fakeFetch = (async () => new Response(JSON.stringify({ msg }), { status: 500 })) as unknown as typeof fetch;
+  await assert.rejects(runSql("CREATE NAMESPACE x", { config, fetch: fakeFetch, sleep: noSleep }), (err: unknown) => {
+    assert.ok(err instanceof ZetarisError);
+    assert.equal(err.detail, "org.apache.spark.sql.AnalysisException: parent namespace : metastore is not existing");
+    return true;
+  });
+});
+
 test("runSql maps 401 to unauthorized and network errors to unreachable", async () => {
   const unauthorized = (async () => new Response("", { status: 401 })) as unknown as typeof fetch;
   await assert.rejects(runSql("SELECT 1", { config, fetch: unauthorized }), isKind("unauthorized"));

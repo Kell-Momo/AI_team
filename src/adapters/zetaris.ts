@@ -177,7 +177,7 @@ function extractDetail(text: string, secrets: readonly string[]): string | undef
   let detail = trimmed;
   try {
     const body = JSON.parse(trimmed) as Record<string, unknown>;
-    for (const key of ["message", "errorMessage", "error_message", "error", "detail", "details", "exception"]) {
+    for (const key of ["msg", "message", "errorMessage", "error_message", "error", "detail", "details", "exception"]) {
       const v = body[key];
       if (typeof v === "string" && v.trim() !== "") {
         detail = v.trim();
@@ -192,6 +192,8 @@ function extractDetail(text: string, secrets: readonly string[]): string | undef
   } catch {
     // Plain-text error body: use as is.
   }
+  // Zetaris errors often embed a full Java stack trace; the useful part is before the first frame.
+  detail = detail.split(/\r?\n\tat /)[0]!.trim();
   const safe = redact(detail, secrets);
   return safe.length > MAX_DETAIL ? `${safe.slice(0, MAX_DETAIL)}...` : safe;
 }

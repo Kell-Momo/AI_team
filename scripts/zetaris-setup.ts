@@ -34,6 +34,10 @@ function buildPhases(usl: string, expected: Record<string, number>): Phase[] {
   const f = (t: string) => `${FILE_DB}.${t}`;
   const u = (t: string) => `${usl}.${t}`;
   const count = (table: string, key: string): Step => ({ sql: `SELECT COUNT(*) AS n FROM ${table}`, expect: expected[key] });
+  // A fresh instance has no lightning.metastore yet ("parent namespace : metastore is not existing"),
+  // so create every ancestor below the catalog, outermost first.
+  const segments = namespace.split(".");
+  const namespaces = segments.slice(2).map((_, i) => segments.slice(0, i + 2).join(".")).concat(namespace);
 
   return [
     {
@@ -52,11 +56,11 @@ function buildPhases(usl: string, expected: Record<string, number>): Phase[] {
     {
       name: "USL namespace and schema",
       steps: [
-        { sql: `CREATE NAMESPACE IF NOT EXISTS ${namespace}` },
+        ...namespaces.map((ns) => ({ sql: `CREATE NAMESPACE IF NOT EXISTS ${ns}` })),
         {
           // One request; each CREATE TABLE must start on its own line.
           sql: [
-            `COMPILE USL ${uslName} DEPLOY NAMESPACE ${namespace} DDL`,
+            `COMPILE USL IF NOT EXISTS ${uslName} DEPLOY NAMESPACE ${namespace} DDL`,
             "CREATE TABLE post_performance(post_id varchar(20) NOT NULL PRIMARY KEY, posted_date varchar(10), platform varchar(20), format varchar(20), pillar varchar(30), language varchar(10), post_hour int, has_price varchar(5), has_cta varchar(5), origin varchar(10), promo_code varchar(20), caption varchar(400), reach int, engagements int, link_clicks int)",
             "CREATE TABLE campaign_daily(row_id varchar(60) NOT NULL PRIMARY KEY, ad_date varchar(10), campaign_id varchar(30), platform varchar(20), spend_xaf double, impressions int, clicks int, promo_code varchar(20))",
             "CREATE TABLE orders(order_id varchar(20) NOT NULL PRIMARY KEY, order_date varchar(10), channel varchar(20), promo_code varchar(20), amount_xaf double)",
@@ -129,6 +133,8 @@ function buildPhases(usl: string, expected: Record<string, number>): Phase[] {
       steps: [
         { sql: `REGISTER DQ valid_metrics TABLE ${u("post_performance")} AS reach > 0 AND engagements <= reach` },
         { sql: `RUN DQ valid_metrics TABLE ${u("post_performance")}`, show: true },
+        // All rules on the table, including the primary-key rule Zetaris derives from the DDL.
+        { sql: `RUN DQ TABLE ${u("post_performance")}`, show: true },
         {
           // Independent check of what the DQ rule should flag.
           sql: `SELECT COUNT(*) AS n FROM ${u("post_performance")} WHERE NOT (reach > 0 AND engagements <= reach)`,
