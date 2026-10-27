@@ -58,11 +58,12 @@ function buildPhases(usl: string, expected: Record<string, number>): Phase[] {
       steps: [
         ...namespaces.map((ns) => ({ sql: `CREATE NAMESPACE IF NOT EXISTS ${ns}` })),
         {
-          // One request; each CREATE TABLE must start on its own line.
+          // One request; each CREATE TABLE on its own line and ended by ";" (newlines alone are
+          // rejected as "Invalid DDL statement"; the last one needs none).
           sql: [
             `COMPILE USL IF NOT EXISTS ${uslName} DEPLOY NAMESPACE ${namespace} DDL`,
-            "CREATE TABLE post_performance(post_id varchar(20) NOT NULL PRIMARY KEY, posted_date varchar(10), platform varchar(20), format varchar(20), pillar varchar(30), language varchar(10), post_hour int, has_price varchar(5), has_cta varchar(5), origin varchar(10), promo_code varchar(20), caption varchar(400), reach int, engagements int, link_clicks int)",
-            "CREATE TABLE campaign_daily(row_id varchar(60) NOT NULL PRIMARY KEY, ad_date varchar(10), campaign_id varchar(30), platform varchar(20), spend_xaf double, impressions int, clicks int, promo_code varchar(20))",
+            "CREATE TABLE post_performance(post_id varchar(20) NOT NULL PRIMARY KEY, posted_date varchar(10), platform varchar(20), format varchar(20), pillar varchar(30), language varchar(10), post_hour int, has_price varchar(5), has_cta varchar(5), origin varchar(10), promo_code varchar(20), caption varchar(400), reach int, engagements int, link_clicks int);",
+            "CREATE TABLE campaign_daily(row_id varchar(60) NOT NULL PRIMARY KEY, ad_date varchar(10), campaign_id varchar(30), platform varchar(20), spend_xaf double, impressions int, clicks int, promo_code varchar(20));",
             "CREATE TABLE orders(order_id varchar(20) NOT NULL PRIMARY KEY, order_date varchar(10), channel varchar(20), promo_code varchar(20), amount_xaf double)",
           ].join("\n"),
         },

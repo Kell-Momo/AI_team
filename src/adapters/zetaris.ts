@@ -49,13 +49,20 @@ export class ZetarisError extends Error {
   }
 }
 
+// COMPILE USL ... DDL is ONE statement whose CREATE TABLEs must be separated by ";" (Zetaris
+// rejects newline-only separation as "Invalid DDL statement"). Only that ";" is allowed inside.
+const USL_DDL = /^COMPILE\s+USL\b/i;
+const NEXT_IS_CREATE_TABLE = /^(?:\s|--[^\n]*\n|\/\*[\s\S]*?\*\/)*CREATE\s+TABLE\b/i;
+const ONLY_TRAILING = /;|\s+|--[^\n]*|\/\*[\s\S]*?\*\//g;
+
 /**
  * Zetaris runs exactly one statement per request. Trim, drop trailing semicolons and reject
- * anything that still contains a top-level `;`. Newlines are kept: COMPILE USL needs them.
+ * anything that still contains a top-level `;`, except between the CREATE TABLEs of a
+ * COMPILE USL DDL block. Newlines are kept: COMPILE USL needs them.
  */
 export function normaliseStatement(sql: string): string {
   const s = sql.trim();
-  let firstSemicolon = -1;
+  const semicolons: number[] = [];
   let i = 0;
   // Skip over a quoted region; returns the index just past its closing quote.
   const skipQuoted = (quote: string, start: number): number => {
@@ -81,18 +88,21 @@ export function normaliseStatement(sql: string): string {
       if (end === -1) throw new ZetarisError("invalid_statement", "Unterminated /* comment in SQL");
       i = end + 2;
     } else if (ch === ";") {
-      firstSemicolon = i;
-      break;
+      semicolons.push(i);
+      i++;
     } else {
       i++;
     }
   }
 
-  let statement = s;
-  if (firstSemicolon !== -1) {
-    const rest = s.slice(firstSemicolon).replace(/;|\s+|--[^\n]*|\/\*[\s\S]*?\*\//g, "");
-    if (rest !== "") throw new ZetarisError("invalid_statement", "Only one SQL statement per request is allowed");
-    statement = s.slice(0, firstSemicolon).trimEnd();
+  // Cut at the first semicolon after which only semicolons, whitespace and comments remain.
+  const trailing = semicolons.find((pos) => s.slice(pos).replace(ONLY_TRAILING, "") === "");
+  const statement = trailing === undefined ? s : s.slice(0, trailing).trimEnd();
+  for (const pos of semicolons) {
+    if (trailing !== undefined && pos >= trailing) break;
+    if (!USL_DDL.test(statement) || !NEXT_IS_CREATE_TABLE.test(s.slice(pos + 1))) {
+      throw new ZetarisError("invalid_statement", "Only one SQL statement per request is allowed");
+    }
   }
   if (statement === "") throw new ZetarisError("invalid_statement", "Empty SQL statement");
   return statement;

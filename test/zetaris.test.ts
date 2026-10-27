@@ -15,6 +15,20 @@ test("normaliseStatement keeps newlines (COMPILE USL needs them)", () => {
   assert.equal(normaliseStatement(ddl), ddl);
 });
 
+test("normaliseStatement allows ; only between the CREATE TABLEs of a COMPILE USL DDL", () => {
+  const ddl = "COMPILE USL m DEPLOY NAMESPACE a.b DDL\nCREATE TABLE t(x int);\nCREATE TABLE u(y int)";
+  assert.equal(normaliseStatement(ddl), ddl);
+  assert.equal(normaliseStatement(`${ddl};\n`), ddl);
+  assert.equal(normaliseStatement("COMPILE USL m NAMESPACE a.b DDL\nCREATE TABLE t(x int);\n-- next\nCREATE TABLE u(y int)").endsWith("u(y int)"), true);
+  for (const sql of [
+    "SELECT 1;\nCREATE TABLE t(x int)", // not a COMPILE USL statement
+    "COMPILE USL m NAMESPACE a.b DDL\nCREATE TABLE t(x int); DROP TABLE t", // ; not followed by CREATE TABLE
+    "COMPILE USL m NAMESPACE a.b DDL\nCREATE TABLE t(x int);\nCREATE TABLE u(y int); SELECT 1",
+  ]) {
+    assert.throws(() => normaliseStatement(sql), isKind("invalid_statement"), sql);
+  }
+});
+
 test("normaliseStatement ignores semicolons inside quotes and comments", () => {
   for (const sql of [
     "SELECT ';' AS s",
