@@ -1,0 +1,6 @@
+{
+  "client": "saveurs-de-douala",
+  "mode": "analyze",
+  "question": "How did the posts planned with GrowthLoop do compared with our existing posts, and what should we post next week?",
+  "period": { "start": "2026-07-01", "end": "2026-10-20" }
+}

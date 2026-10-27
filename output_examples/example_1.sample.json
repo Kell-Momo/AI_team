@@ -1,0 +1,665 @@
+{
+  "run_id": "20261027T215556Z-04b0ab",
+  "status": "completed",
+  "execution_time_seconds": 0.2,
+  "source": "sample",
+  "output": {
+    "summary": "7 verified insights from this period. Strongest: Among post formats (groups of at least 3 posts), reel posts have the highest average engagement rate (6.88% over 7 posts), against 4.01% for text posts (10 posts), 1.72 times higher. The plan below applies them to next week's 5 posts.",
+    "insights": [
+      {
+        "id": "c1",
+        "statement": "Among post formats (groups of at least 3 posts), reel posts have the highest average engagement rate (6.88% over 7 posts), against 4.01% for text posts (10 posts), 1.72 times higher.",
+        "evidence": [
+          {
+            "query": "format_performance",
+            "segment": "reel",
+            "metric": "avg_engagement_rate",
+            "value": 0.0688
+          },
+          {
+            "query": "format_performance",
+            "segment": "text",
+            "metric": "avg_engagement_rate",
+            "value": 0.0401
+          },
+          {
+            "query": "format_performance",
+            "segment": "reel",
+            "metric": "posts",
+            "value": 7
+          },
+          {
+            "query": "format_performance",
+            "segment": "text",
+            "metric": "posts",
+            "value": 10
+          }
+        ]
+      },
+      {
+        "id": "c2",
+        "statement": "Among content pillars (groups of at least 3 posts), behind-the-scenes posts have the highest average engagement rate (6.76% over 8 posts), against 4.30% for promo posts (14 posts), 1.57 times higher.",
+        "evidence": [
+          {
+            "query": "pillar_performance",
+            "segment": "behind_scenes",
+            "metric": "avg_engagement_rate",
+            "value": 0.0676
+          },
+          {
+            "query": "pillar_performance",
+            "segment": "promo",
+            "metric": "avg_engagement_rate",
+            "value": 0.043
+          },
+          {
+            "query": "pillar_performance",
+            "segment": "behind_scenes",
+            "metric": "posts",
+            "value": 8
+          },
+          {
+            "query": "pillar_performance",
+            "segment": "promo",
+            "metric": "posts",
+            "value": 14
+          }
+        ]
+      },
+      {
+        "id": "c3",
+        "statement": "Among languages (groups of at least 3 posts), posts in Pidgin have the highest average engagement rate (6.58% over 9 posts), against 4.42% for posts in English (16 posts), 1.49 times higher.",
+        "evidence": [
+          {
+            "query": "language_performance",
+            "segment": "pidgin",
+            "metric": "avg_engagement_rate",
+            "value": 0.0658
+          },
+          {
+            "query": "language_performance",
+            "segment": "en",
+            "metric": "avg_engagement_rate",
+            "value": 0.0442
+          },
+          {
+            "query": "language_performance",
+            "segment": "pidgin",
+            "metric": "posts",
+            "value": 9
+          },
+          {
+            "query": "language_performance",
+            "segment": "en",
+            "metric": "posts",
+            "value": 16
+          }
+        ]
+      },
+      {
+        "id": "c4",
+        "statement": "Among times of day (groups of at least 3 posts), evening (18:00 or later) posts have the highest average engagement rate (6.26% over 22 posts), against 4.27% for midday and afternoon (12:00 to 17:59) posts (20 posts), 1.47 times higher.",
+        "evidence": [
+          {
+            "query": "timing_performance",
+            "segment": "evening",
+            "metric": "avg_engagement_rate",
+            "value": 0.0626
+          },
+          {
+            "query": "timing_performance",
+            "segment": "midday_afternoon",
+            "metric": "avg_engagement_rate",
+            "value": 0.0427
+          },
+          {
+            "query": "timing_performance",
+            "segment": "evening",
+            "metric": "posts",
+            "value": 22
+          },
+          {
+            "query": "timing_performance",
+            "segment": "midday_afternoon",
+            "metric": "posts",
+            "value": 20
+          }
+        ]
+      },
+      {
+        "id": "c5",
+        "statement": "Among platforms (groups of at least 3 posts), TikTok posts have the highest average engagement rate (5.73% over 4 posts), against 4.80% for Facebook posts (28 posts), 1.19 times higher.",
+        "evidence": [
+          {
+            "query": "platform_performance",
+            "segment": "tiktok",
+            "metric": "avg_engagement_rate",
+            "value": 0.0573
+          },
+          {
+            "query": "platform_performance",
+            "segment": "facebook",
+            "metric": "avg_engagement_rate",
+            "value": 0.048
+          },
+          {
+            "query": "platform_performance",
+            "segment": "tiktok",
+            "metric": "posts",
+            "value": 4
+          },
+          {
+            "query": "platform_performance",
+            "segment": "facebook",
+            "metric": "posts",
+            "value": 28
+          }
+        ]
+      },
+      {
+        "id": "c6",
+        "statement": "Among posts grouped by call to action (groups of at least 3 posts), posts with a call to action have the highest average engagement rate (5.32% over 19 posts), against 5.07% for posts without a call to action (43 posts), 1.05 times higher.",
+        "evidence": [
+          {
+            "query": "cta_performance",
+            "segment": "cta_true",
+            "metric": "avg_engagement_rate",
+            "value": 0.0532
+          },
+          {
+            "query": "cta_performance",
+            "segment": "cta_false",
+            "metric": "avg_engagement_rate",
+            "value": 0.0507
+          },
+          {
+            "query": "cta_performance",
+            "segment": "cta_true",
+            "metric": "posts",
+            "value": 19
+          },
+          {
+            "query": "cta_performance",
+            "segment": "cta_false",
+            "metric": "posts",
+            "value": 43
+          }
+        ]
+      },
+      {
+        "id": "c7",
+        "statement": "Orders using promo code POULETDG add up to 4.66 FCFA of revenue per FCFA of ad spend (112 orders), against 1.08 for SOYA500; cost per order 1,237 FCFA vs 2,332 FCFA.",
+        "evidence": [
+          {
+            "query": "promo_roi",
+            "segment": "POULETDG",
+            "metric": "roas",
+            "value": 4.66
+          },
+          {
+            "query": "promo_roi",
+            "segment": "SOYA500",
+            "metric": "roas",
+            "value": 1.08
+          },
+          {
+            "query": "promo_roi",
+            "segment": "POULETDG",
+            "metric": "cost_per_order_xaf",
+            "value": 1237
+          },
+          {
+            "query": "promo_roi",
+            "segment": "SOYA500",
+            "metric": "cost_per_order_xaf",
+            "value": 2332
+          },
+          {
+            "query": "promo_roi",
+            "segment": "POULETDG",
+            "metric": "orders",
+            "value": 112
+          }
+        ]
+      }
+    ],
+    "rejected": [],
+    "recommendations": [
+      {
+        "action": "Make reel the main format next week.",
+        "why": "Among post formats (groups of at least 3 posts), reel posts have the highest average engagement rate (6.88% over 7 posts), against 4.01% for text posts (10 posts), 1.72 times higher.",
+        "claim_ids": [
+          "c1"
+        ]
+      },
+      {
+        "action": "Post more behind-the-scenes content.",
+        "why": "Among content pillars (groups of at least 3 posts), behind-the-scenes posts have the highest average engagement rate (6.76% over 8 posts), against 4.30% for promo posts (14 posts), 1.57 times higher.",
+        "claim_ids": [
+          "c2"
+        ]
+      },
+      {
+        "action": "Write more posts in Pidgin.",
+        "why": "Among languages (groups of at least 3 posts), posts in Pidgin have the highest average engagement rate (6.58% over 9 posts), against 4.42% for posts in English (16 posts), 1.49 times higher.",
+        "claim_ids": [
+          "c3"
+        ]
+      },
+      {
+        "action": "Schedule posts in the evening (18:00 or later) slot.",
+        "why": "Among times of day (groups of at least 3 posts), evening (18:00 or later) posts have the highest average engagement rate (6.26% over 22 posts), against 4.27% for midday and afternoon (12:00 to 17:59) posts (20 posts), 1.47 times higher.",
+        "claim_ids": [
+          "c4"
+        ]
+      },
+      {
+        "action": "Put more of the weekly posts on TikTok.",
+        "why": "Among platforms (groups of at least 3 posts), TikTok posts have the highest average engagement rate (5.73% over 4 posts), against 4.80% for Facebook posts (28 posts), 1.19 times higher.",
+        "claim_ids": [
+          "c5"
+        ]
+      }
+    ],
+    "plan": [
+      {
+        "day": "Monday",
+        "platform": "tiktok",
+        "format": "reel",
+        "pillar": "menu",
+        "language": "pidgin",
+        "post_hour": 19,
+        "angle": "Dish of the day close-up with its FCFA price"
+      },
+      {
+        "day": "Tuesday",
+        "platform": "tiktok",
+        "format": "reel",
+        "pillar": "promo",
+        "language": "fr",
+        "post_hour": 20,
+        "angle": "Weekly deal with the promo code and price",
+        "promo_code": "POULETDG"
+      },
+      {
+        "day": "Thursday",
+        "platform": "instagram",
+        "format": "carousel",
+        "pillar": "behind_scenes",
+        "language": "pidgin",
+        "post_hour": 18,
+        "angle": "Early market run and cooking in the kitchen"
+      },
+      {
+        "day": "Friday",
+        "platform": "tiktok",
+        "format": "reel",
+        "pillar": "customer_story",
+        "language": "fr",
+        "post_hour": 19,
+        "angle": "A regular customer on why they keep coming back"
+      },
+      {
+        "day": "Saturday",
+        "platform": "facebook",
+        "format": "image",
+        "pillar": "behind_scenes",
+        "language": "pidgin",
+        "post_hour": 20,
+        "angle": "Early market run and cooking in the kitchen"
+      }
+    ]
+  },
+  "memory": {
+    "recalled": [],
+    "stored": 8
+  },
+  "data_quality": {
+    "total_posts": 65,
+    "valid_posts": 62,
+    "invalid_posts": 3
+  },
+  "models": [],
+  "trace": [
+    {
+      "timestamp": "2026-10-27T21:55:56.091Z",
+      "agent_name": "Orchestrator",
+      "action": "start_run",
+      "target_agent": null,
+      "model": null,
+      "status": "info",
+      "output_summary": "data source: local sample CSVs (SAMPLE_MODE)",
+      "retry_count": 0
+    },
+    {
+      "timestamp": "2026-10-27T21:55:56.101Z",
+      "agent_name": "MemoryKeeper",
+      "action": "recall_lessons",
+      "target_agent": "DataAnalyst",
+      "model": null,
+      "status": "success",
+      "output_summary": "No lessons yet for saveurs-de-douala: first run starts from the data alone",
+      "retry_count": 0
+    },
+    {
+      "timestamp": "2026-10-27T21:55:56.128Z",
+      "agent_name": "DataAnalyst",
+      "action": "run_query",
+      "target_agent": null,
+      "model": null,
+      "status": "success",
+      "output_summary": "4 rows from sample in 1 ms",
+      "retry_count": 0
+    },
+    {
+      "timestamp": "2026-10-27T21:55:56.130Z",
+      "agent_name": "DataAnalyst",
+      "action": "run_query",
+      "target_agent": null,
+      "model": null,
+      "status": "success",
+      "output_summary": "4 rows from sample in 0 ms",
+      "retry_count": 0
+    },
+    {
+      "timestamp": "2026-10-27T21:55:56.132Z",
+      "agent_name": "DataAnalyst",
+      "action": "run_query",
+      "target_agent": null,
+      "model": null,
+      "status": "success",
+      "output_summary": "3 rows from sample in 0 ms",
+      "retry_count": 0
+    },
+    {
+      "timestamp": "2026-10-27T21:55:56.132Z",
+      "agent_name": "DataAnalyst",
+      "action": "run_query",
+      "target_agent": null,
+      "model": null,
+      "status": "success",
+      "output_summary": "3 rows from sample in 0 ms",
+      "retry_count": 0
+    },
+    {
+      "timestamp": "2026-10-27T21:55:56.133Z",
+      "agent_name": "DataAnalyst",
+      "action": "run_query",
+      "target_agent": null,
+      "model": null,
+      "status": "success",
+      "output_summary": "3 rows from sample in 0 ms",
+      "retry_count": 0
+    },
+    {
+      "timestamp": "2026-10-27T21:55:56.133Z",
+      "agent_name": "DataAnalyst",
+      "action": "run_query",
+      "target_agent": null,
+      "model": null,
+      "status": "success",
+      "output_summary": "2 rows from sample in 0 ms",
+      "retry_count": 0
+    },
+    {
+      "timestamp": "2026-10-27T21:55:56.134Z",
+      "agent_name": "DataAnalyst",
+      "action": "run_query",
+      "target_agent": null,
+      "model": null,
+      "status": "success",
+      "output_summary": "1 rows from sample in 0 ms",
+      "retry_count": 0
+    },
+    {
+      "timestamp": "2026-10-27T21:55:56.135Z",
+      "agent_name": "DataAnalyst",
+      "action": "run_query",
+      "target_agent": null,
+      "model": null,
+      "status": "success",
+      "output_summary": "4 rows from sample in 1 ms",
+      "retry_count": 0
+    },
+    {
+      "timestamp": "2026-10-27T21:55:56.135Z",
+      "agent_name": "DataAnalyst",
+      "action": "run_query",
+      "target_agent": null,
+      "model": null,
+      "status": "success",
+      "output_summary": "5 rows from sample in 0 ms",
+      "retry_count": 0
+    },
+    {
+      "timestamp": "2026-10-27T21:55:56.136Z",
+      "agent_name": "DataAnalyst",
+      "action": "run_query",
+      "target_agent": null,
+      "model": null,
+      "status": "success",
+      "output_summary": "1 rows from sample in 0 ms",
+      "retry_count": 0
+    },
+    {
+      "timestamp": "2026-10-27T21:55:56.137Z",
+      "agent_name": "DataAnalyst",
+      "action": "llm_call",
+      "target_agent": "Nightshift",
+      "model": null,
+      "status": "fallback",
+      "output_summary": "SAMPLE_MODE: no model calls; deterministic fallback",
+      "retry_count": 0
+    },
+    {
+      "timestamp": "2026-10-27T21:55:56.138Z",
+      "agent_name": "DataAnalyst",
+      "action": "propose_claims",
+      "target_agent": "EvidenceCritic",
+      "model": null,
+      "status": "fallback",
+      "output_summary": "No model available: 7 deterministic best-vs-worst claims",
+      "retry_count": 0
+    },
+    {
+      "timestamp": "2026-10-27T21:55:56.142Z",
+      "agent_name": "EvidenceCritic",
+      "action": "llm_call",
+      "target_agent": "Nightshift",
+      "model": null,
+      "status": "fallback",
+      "output_summary": "SAMPLE_MODE: no model calls; deterministic fallback",
+      "retry_count": 0
+    },
+    {
+      "timestamp": "2026-10-27T21:55:56.142Z",
+      "agent_name": "EvidenceCritic",
+      "action": "overreach_review",
+      "target_agent": null,
+      "model": null,
+      "status": "fallback",
+      "output_summary": "No model available: deterministic checks only",
+      "retry_count": 0
+    },
+    {
+      "timestamp": "2026-10-27T21:55:56.144Z",
+      "agent_name": "EvidenceCritic",
+      "action": "verify_claim",
+      "target_agent": "Strategist",
+      "model": null,
+      "status": "success",
+      "output_summary": "approved: every number matches the query results",
+      "retry_count": 0
+    },
+    {
+      "timestamp": "2026-10-27T21:55:56.144Z",
+      "agent_name": "EvidenceCritic",
+      "action": "verify_claim",
+      "target_agent": "Strategist",
+      "model": null,
+      "status": "success",
+      "output_summary": "approved: every number matches the query results",
+      "retry_count": 0
+    },
+    {
+      "timestamp": "2026-10-27T21:55:56.145Z",
+      "agent_name": "EvidenceCritic",
+      "action": "verify_claim",
+      "target_agent": "Strategist",
+      "model": null,
+      "status": "success",
+      "output_summary": "approved: every number matches the query results",
+      "retry_count": 0
+    },
+    {
+      "timestamp": "2026-10-27T21:55:56.145Z",
+      "agent_name": "EvidenceCritic",
+      "action": "verify_claim",
+      "target_agent": "Strategist",
+      "model": null,
+      "status": "success",
+      "output_summary": "approved: every number matches the query results",
+      "retry_count": 0
+    },
+    {
+      "timestamp": "2026-10-27T21:55:56.145Z",
+      "agent_name": "EvidenceCritic",
+      "action": "verify_claim",
+      "target_agent": "Strategist",
+      "model": null,
+      "status": "success",
+      "output_summary": "approved: every number matches the query results",
+      "retry_count": 0
+    },
+    {
+      "timestamp": "2026-10-27T21:55:56.147Z",
+      "agent_name": "EvidenceCritic",
+      "action": "verify_claim",
+      "target_agent": "Strategist",
+      "model": null,
+      "status": "success",
+      "output_summary": "approved: every number matches the query results",
+      "retry_count": 0
+    },
+    {
+      "timestamp": "2026-10-27T21:55:56.147Z",
+      "agent_name": "EvidenceCritic",
+      "action": "verify_claim",
+      "target_agent": "Strategist",
+      "model": null,
+      "status": "success",
+      "output_summary": "approved: every number matches the query results",
+      "retry_count": 0
+    },
+    {
+      "timestamp": "2026-10-27T21:55:56.149Z",
+      "agent_name": "Strategist",
+      "action": "llm_call",
+      "target_agent": "Nightshift",
+      "model": null,
+      "status": "fallback",
+      "output_summary": "SAMPLE_MODE: no model calls; deterministic fallback",
+      "retry_count": 0
+    },
+    {
+      "timestamp": "2026-10-27T21:55:56.150Z",
+      "agent_name": "Strategist",
+      "action": "recommend_and_plan",
+      "target_agent": "MemoryKeeper",
+      "model": null,
+      "status": "fallback",
+      "output_summary": "No model available: rule-based 5 recommendations, 5-post plan",
+      "retry_count": 0
+    },
+    {
+      "timestamp": "2026-10-27T21:55:56.154Z",
+      "agent_name": "MemoryKeeper",
+      "action": "store_insight",
+      "target_agent": null,
+      "model": null,
+      "status": "success",
+      "output_summary": "stored as mem-1 (tags q:format_performance, best:reel)",
+      "retry_count": 0
+    },
+    {
+      "timestamp": "2026-10-27T21:55:56.175Z",
+      "agent_name": "MemoryKeeper",
+      "action": "store_insight",
+      "target_agent": null,
+      "model": null,
+      "status": "success",
+      "output_summary": "stored as mem-2 (tags q:pillar_performance, best:behind_scenes)",
+      "retry_count": 0
+    },
+    {
+      "timestamp": "2026-10-27T21:55:56.198Z",
+      "agent_name": "MemoryKeeper",
+      "action": "store_insight",
+      "target_agent": null,
+      "model": null,
+      "status": "success",
+      "output_summary": "stored as mem-3 (tags q:language_performance, best:pidgin)",
+      "retry_count": 0
+    },
+    {
+      "timestamp": "2026-10-27T21:55:56.222Z",
+      "agent_name": "MemoryKeeper",
+      "action": "store_insight",
+      "target_agent": null,
+      "model": null,
+      "status": "success",
+      "output_summary": "stored as mem-4 (tags q:timing_performance, best:evening)",
+      "retry_count": 0
+    },
+    {
+      "timestamp": "2026-10-27T21:55:56.250Z",
+      "agent_name": "MemoryKeeper",
+      "action": "store_insight",
+      "target_agent": null,
+      "model": null,
+      "status": "success",
+      "output_summary": "stored as mem-5 (tags q:platform_performance, best:tiktok)",
+      "retry_count": 0
+    },
+    {
+      "timestamp": "2026-10-27T21:55:56.276Z",
+      "agent_name": "MemoryKeeper",
+      "action": "store_insight",
+      "target_agent": null,
+      "model": null,
+      "status": "success",
+      "output_summary": "stored as mem-6 (tags q:cta_performance, best:cta_true)",
+      "retry_count": 0
+    },
+    {
+      "timestamp": "2026-10-27T21:55:56.292Z",
+      "agent_name": "MemoryKeeper",
+      "action": "store_insight",
+      "target_agent": null,
+      "model": null,
+      "status": "success",
+      "output_summary": "stored as mem-7 (tags q:promo_roi, best:POULETDG)",
+      "retry_count": 0
+    },
+    {
+      "timestamp": "2026-10-27T21:55:56.318Z",
+      "agent_name": "MemoryKeeper",
+      "action": "store_decision",
+      "target_agent": null,
+      "model": null,
+      "status": "success",
+      "output_summary": "stored decision summary as mem-8",
+      "retry_count": 0
+    },
+    {
+      "timestamp": "2026-10-27T21:55:56.319Z",
+      "agent_name": "Orchestrator",
+      "action": "finish_run",
+      "target_agent": null,
+      "model": null,
+      "status": "success",
+      "output_summary": "completed in 0.2 s: 7 insights, 0 rejected, 8 memories stored; models: none (deterministic fallbacks)",
+      "retry_count": 0
+    }
+  ]
+}

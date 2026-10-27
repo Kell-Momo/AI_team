@@ -89,6 +89,11 @@ export class MarketingMemory implements MemoryPort {
     return m && { id: m.id, content: m.content, confidence: m.confidence, tags: [...m.tags] };
   }
 
+  /** Id of a memory with exactly this content, so re-running the same analysis doesn't duplicate lessons. */
+  findByContent(content: string): string | undefined {
+    return this.hmem.store.all().find((m) => m.content === content)?.id;
+  }
+
   size(): number {
     return this.hmem.store.all().length;
   }
