@@ -1,0 +1,23 @@
+{
+  "name": "growthloop",
+  "version": "0.1.0",
+  "private": true,
+  "description": "GrowthLoop: a multi-agent marketing team in a product for small businesses.",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "start": "tsx src/server.ts",
+    "test": "tsx scripts/test.ts",
+    "test:hmem": "tsx scripts/test.ts test/hmem.test.ts",
+    "data:generate": "tsx scripts/generate-data.ts",
+    "zetaris:setup": "tsx scripts/zetaris-setup.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.43",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2"
+  }
+}

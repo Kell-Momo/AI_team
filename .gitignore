@@ -1,0 +1,17 @@
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Dependencies
+node_modules/
+
+# Runtime output
+logs/*.jsonl
+.memory/
+outbox/
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
+*.log

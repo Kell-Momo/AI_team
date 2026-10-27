@@ -1,0 +1,2 @@
+# LF everywhere: bash scripts break on CRLF, and the generated CSVs must be byte-identical on every OS.
+* text=auto eol=lf
