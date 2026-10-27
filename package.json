@@ -10,11 +10,12 @@
   "scripts": {
     "start": "tsx src/server.ts",
     "test": "tsx scripts/test.ts",
-    "test:hmem": "tsx scripts/test.ts test/hmem.test.ts",
+    "test:hmem": "tsx scripts/test-hmem.ts",
     "data:generate": "tsx scripts/generate-data.ts",
     "zetaris:setup": "tsx scripts/zetaris-setup.ts",
-    "typecheck": "tsc --noEmit",
-    "zetaris:check": "tsx scripts/zetaris-check.ts"
+    "typecheck": "tsc --noEmit && tsc --noEmit -p vendor/tsconfig.json",
+    "zetaris:check": "tsx scripts/zetaris-check.ts",
+    "nightshift:check": "tsx scripts/check-nightshift.ts"
   },
   "devDependencies": {
     "@types/node": "^20.19.43",

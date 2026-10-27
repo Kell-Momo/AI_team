@@ -1,0 +1,14 @@
+{
+  "//": "Type-checks the vendored H-MEM code with upstream's own compiler options (engines/hmem/reference/tsconfig.json), so the files stay byte-identical to upstream. Only addition: Node types, which TypeScript 7 no longer loads implicitly.",
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "strict": true,
+    "skipLibCheck": true,
+    "allowImportingTsExtensions": true,
+    "noEmit": true,
+    "types": ["node"]
+  },
+  "include": ["hmem", "hmem-conformance"]
+}
